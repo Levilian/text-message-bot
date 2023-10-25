@@ -29,9 +29,16 @@ export async function POST(req: Request) {
   }
 
   const res = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
+    model: process.env.AI_MODEL || 'gpt-3.5-turbo',
     messages,
-    temperature: 0.7,
+    temperature: process.env.AI_TEMP ? parseFloat(process.env.AI_TEMP) : 0.7,
+    max_tokens: process.env.AI_MAX_TOKENS
+    ? parseInt(process.env.AI_MAX_TOKENS)
+    : 256,
+    frequency_penalty: process.env.AI_FREQ_PENALTY ? parseFloat(process.env.AI_FREQ_PENALTY)
+    : 1.0,
+    presence_penalty: process.env.AI_PRES_PENALTY ? parseFloat(process.env.AI_PRES_PENALTY)
+    : 1.0,
     stream: true
   })
 
